@@ -14,7 +14,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     
-    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&grant_type=authorization_code&redirect_uri=%@&code=%@",@"2hWclaJLdBAnrFcqiv7xieGR88edC-q0FVF9CKUj",@"R5SJb3rtHiODnni8qR8VJqKO4lPmCj68",@"https://github.com/coderyi",code];
+    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&grant_type=authorization_code&redirect_uri=%@&code=%@",ClientSecret,ClientId,RedirectUrl,code];
     
     NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:bodyData];

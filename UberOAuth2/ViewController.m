@@ -10,7 +10,6 @@
 #import "UberLoginWebViewController.h"
 #import "UberAPI.h"
 
-#define ClientSecret @""
 
 @interface ViewController ()<UIAlertViewDelegate>
 
@@ -39,6 +38,44 @@
 
 }
 
+- (void)loginButAction{
+    if (ClientId.length<1 || ClientSecret.length<1 || RedirectUrl.length<1 ) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+        [alerView show];
+
+    }
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies])
+    {
+        [storage deleteCookie:cookie];
+    }
+    //    缓存  清除
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
+    NSString *url=[NSString stringWithFormat:@"https://login.uber.com.cn/oauth/v2/authorize?client_id=%@&redirect_url=%@&response_type=code&scope=profile history places history_lite",ClientId,RedirectUrl ];
+    NSString *encodedUrlString = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    webViewController.urlString=encodedUrlString;
+    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+        NSLog(@"access token %@ ",jsonDict);
+        
+        if (error) {
+            if ([error.domain isEqualToString:@"error2"]) {
+                UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+                [alerView show];
+            }
+        }else{
+            [self requestUserProfileButAction];
+            
+        }
+        
+    };
+    
+    [self presentViewController:webViewController animated:YES completion:nil];
+}
+
+
 - (void)requestUserProfileButAction{
     NSString *accessToken=[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"];
     if (!accessToken || accessToken.length<1) {
@@ -65,38 +102,6 @@
         }
         
     }];
-}
-- (void)loginButAction{
-    
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (cookie in [storage cookies])
-    {
-        [storage deleteCookie:cookie];
-    }
-    //    缓存  清除
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    
-    UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
-    webViewController.urlString=[NSString stringWithFormat:@"https://login.uber.com.cn/oauth/v2/authorize?client_id=R5SJb3rtHiODnni8qR8VJqKO4lPmCj68&redirect_url=https://github.com/coderyi&response_type=code&scope=profile" ];
-    
-    
-    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
-        NSLog(@"access token %@ ",jsonDict);
-
-        if (error) {
-            if ([error.domain isEqualToString:@"error2"]) {
-                UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
-                [alerView show];
-            }
-        }else{
-            [self userProfileRequest];
-
-        }
-
-    };
-    
-    [self presentViewController:webViewController animated:YES completion:nil];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

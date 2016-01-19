@@ -7,6 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#define ClientId @"R5SJb3rtHiODnni8qR8VJqKO4lPmCj68"
+#define ClientSecret @"2hWclaJLdBAnrFcqiv7xieGR88edC-q0FVF9CKUj"
+#define RedirectUrl @"https://github.com/coderyi"
+
 typedef void (^ RequestResult)(NSDictionary *jsonDict, NSURLResponse *response, NSError *error);
 
 @interface UberAPI : NSObject
