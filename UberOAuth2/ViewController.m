@@ -42,6 +42,7 @@
     if (ClientId.length<1 || ClientSecret.length<1 || RedirectUrl.length<1 ) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
+        return;
 
     }
     NSHTTPCookie *cookie;
@@ -77,6 +78,13 @@
 
 
 - (void)requestUserProfileButAction{
+    if (ClientId.length<1 || ClientSecret.length<1 || RedirectUrl.length<1 ) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+        [alerView show];
+        return;
+        
+    }
+
     NSString *accessToken=[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"];
     if (!accessToken || accessToken.length<1) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"please login first" delegate:self cancelButtonTitle:@"sure" otherButtonTitles:@"cancel", nil];
