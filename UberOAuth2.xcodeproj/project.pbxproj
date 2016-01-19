@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A919FF51C4DE00900A1FB34 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A919FF41C4DE00900A1FB34 /* main.m */; };
+		0A919FF81C4DE00900A1FB34 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A919FF71C4DE00900A1FB34 /* AppDelegate.m */; };
+		0A919FFB1C4DE00900A1FB34 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A919FFA1C4DE00900A1FB34 /* ViewController.m */; };
+		0A919FFE1C4DE00900A1FB34 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A919FFC1C4DE00900A1FB34 /* Main.storyboard */; };
+		0A91A0001C4DE00900A1FB34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A919FFF1C4DE00900A1FB34 /* Assets.xcassets */; };
+		0A91A0031C4DE00900A1FB34 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A91A0011C4DE00900A1FB34 /* LaunchScreen.storyboard */; };
+		0A91A00D1C4DE14500A1FB34 /* UberLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */; };
+		0ADD752A1C4E3BFE0089A399 /* UberAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD75291C4E3BFE0089A399 /* UberAPI.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A919FF01C4DE00900A1FB34 /* UberOAuth2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberOAuth2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A919FF41C4DE00900A1FB34 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0A919FF61C4DE00900A1FB34 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0A919FF71C4DE00900A1FB34 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0A919FF91C4DE00900A1FB34 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		0A919FFA1C4DE00900A1FB34 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		0A919FFD1C4DE00900A1FB34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0A919FFF1C4DE00900A1FB34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0A91A0021C4DE00900A1FB34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0A91A0041C4DE00900A1FB34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A91A00B1C4DE14500A1FB34 /* UberLoginWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UberLoginWebViewController.h; sourceTree = "<group>"; };
+		0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberLoginWebViewController.m; sourceTree = "<group>"; };
+		0ADD75281C4E3BFE0089A399 /* UberAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UberAPI.h; sourceTree = "<group>"; };
+		0ADD75291C4E3BFE0089A399 /* UberAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberAPI.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0A919FED1C4DE00900A1FB34 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A919FE71C4DE00900A1FB34 = {
+			isa = PBXGroup;
+			children = (
+				0A919FF21C4DE00900A1FB34 /* UberOAuth2 */,
+				0A919FF11C4DE00900A1FB34 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0A919FF11C4DE00900A1FB34 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A919FF01C4DE00900A1FB34 /* UberOAuth2.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A919FF21C4DE00900A1FB34 /* UberOAuth2 */ = {
+			isa = PBXGroup;
+			children = (
+				0A91A00A1C4DE02800A1FB34 /* UberOAuth2 */,
+				0A919FF61C4DE00900A1FB34 /* AppDelegate.h */,
+				0A919FF71C4DE00900A1FB34 /* AppDelegate.m */,
+				0A919FF91C4DE00900A1FB34 /* ViewController.h */,
+				0A919FFA1C4DE00900A1FB34 /* ViewController.m */,
+				0A919FFC1C4DE00900A1FB34 /* Main.storyboard */,
+				0A919FFF1C4DE00900A1FB34 /* Assets.xcassets */,
+				0A91A0011C4DE00900A1FB34 /* LaunchScreen.storyboard */,
+				0A91A0041C4DE00900A1FB34 /* Info.plist */,
+				0A919FF31C4DE00900A1FB34 /* Supporting Files */,
+			);
+			path = UberOAuth2;
+			sourceTree = "<group>";
+		};
+		0A919FF31C4DE00900A1FB34 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0A919FF41C4DE00900A1FB34 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0A91A00A1C4DE02800A1FB34 /* UberOAuth2 */ = {
+			isa = PBXGroup;
+			children = (
+				0A91A00B1C4DE14500A1FB34 /* UberLoginWebViewController.h */,
+				0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */,
+				0ADD75281C4E3BFE0089A399 /* UberAPI.h */,
+				0ADD75291C4E3BFE0089A399 /* UberAPI.m */,
+			);
+			path = UberOAuth2;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A919FEF1C4DE00900A1FB34 /* UberOAuth2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A91A0071C4DE00900A1FB34 /* Build configuration list for PBXNativeTarget "UberOAuth2" */;
+			buildPhases = (
+				0A919FEC1C4DE00900A1FB34 /* Sources */,
+				0A919FED1C4DE00900A1FB34 /* Frameworks */,
+				0A919FEE1C4DE00900A1FB34 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UberOAuth2;
+			productName = UberOAuth2;
+			productReference = 0A919FF01C4DE00900A1FB34 /* UberOAuth2.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0A919FE81C4DE00900A1FB34 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = coderyi;
+				TargetAttributes = {
+					0A919FEF1C4DE00900A1FB34 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 0A919FEB1C4DE00900A1FB34 /* Build configuration list for PBXProject "UberOAuth2" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0A919FE71C4DE00900A1FB34;
+			productRefGroup = 0A919FF11C4DE00900A1FB34 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0A919FEF1C4DE00900A1FB34 /* UberOAuth2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0A919FEE1C4DE00900A1FB34 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A91A0031C4DE00900A1FB34 /* LaunchScreen.storyboard in Resources */,
+				0A91A0001C4DE00900A1FB34 /* Assets.xcassets in Resources */,
+				0A919FFE1C4DE00900A1FB34 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A919FEC1C4DE00900A1FB34 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A919FFB1C4DE00900A1FB34 /* ViewController.m in Sources */,
+				0A919FF81C4DE00900A1FB34 /* AppDelegate.m in Sources */,
+				0ADD752A1C4E3BFE0089A399 /* UberAPI.m in Sources */,
+				0A919FF51C4DE00900A1FB34 /* main.m in Sources */,
+				0A91A00D1C4DE14500A1FB34 /* UberLoginWebViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0A919FFC1C4DE00900A1FB34 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0A919FFD1C4DE00900A1FB34 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		0A91A0011C4DE00900A1FB34 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0A91A0021C4DE00900A1FB34 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0A91A0051C4DE00900A1FB34 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		0A91A0061C4DE00900A1FB34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0A91A0081C4DE00900A1FB34 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = UberOAuth2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = coderyi.UberOAuth2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0A91A0091C4DE00900A1FB34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = UberOAuth2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = coderyi.UberOAuth2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A919FEB1C4DE00900A1FB34 /* Build configuration list for PBXProject "UberOAuth2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A91A0051C4DE00900A1FB34 /* Debug */,
+				0A91A0061C4DE00900A1FB34 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A91A0071C4DE00900A1FB34 /* Build configuration list for PBXNativeTarget "UberOAuth2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A91A0081C4DE00900A1FB34 /* Debug */,
+				0A91A0091C4DE00900A1FB34 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0A919FE81C4DE00900A1FB34 /* Project object */;
+}
