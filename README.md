@@ -22,7 +22,7 @@ pod 'UberOAuth2', '~> 0.1.1'
 ####Instruction
 OAuth2 login
 <pre>
-UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
+	UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
     NSString *urlString=[NSString stringWithFormat:@"https://login.uber.com.cn/oauth/v2/authorize?client_id=%@&redirect_url=%@&response_type=code&scope=profile history places history_lite",ClientId,RedirectUrl ];
     NSString *encodedUrlString = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     webViewController.urlString=encodedUrlString;
