@@ -52,5 +52,5 @@ get user profile through accesstoken
 
 #### Licenses
 
-All source code is licensed under the [MIT License](https://github.com/coderyi/UberOAuth2/blob/master/LICENSE).
+All source code is licensed under the [MIT License](https://github.com/by-the-way/UberOAuth2/blob/master/LICENSE).
 
