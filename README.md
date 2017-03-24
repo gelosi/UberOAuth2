@@ -19,7 +19,7 @@ pod 'UberOAuth2', '~> 0.1.1'
 ```
 
 
-####Instruction
+#### Instruction
 OAuth2 login
 <pre>
 	UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
@@ -42,7 +42,7 @@ get user profile through accesstoken
     }];
 
 </pre>
-####Uber OAuth2 Flow
+#### Uber OAuth2 Flow
 
 <img  src="https://github.com/uberHackathon/UberOAuth2/blob/master/uberoauth2.png" width="421" height="365">
 
