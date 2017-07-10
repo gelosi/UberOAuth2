@@ -14,7 +14,8 @@
 
 @implementation UberLoginWebViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     if ([[[UIDevice currentDevice]systemVersion] floatValue] >= 7.0) {
@@ -68,25 +69,38 @@
 }
 
 #pragma mark - UIWebViewDelegate
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
-    NSString *requestUrl = webView.request.URL.absoluteString;
-    for (int i=0; i<requestUrl.length-5; i++) {
-        NSString *subUrl=[requestUrl substringWithRange:NSMakeRange(i, 5)];
-        if ([subUrl isEqualToString:@"code="]) {
-            [self requestAccessTokenActionWithCode:[requestUrl substringWithRange:NSMakeRange(i+5, requestUrl.length-32)]];
-            return;
-        }
-    }
-    
-}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    BOOL shouldCheckForCode = self.uberAPI.redirectURL && [request.URL.absoluteString hasPrefix:self.uberAPI.redirectURL];
+    
+    if( shouldCheckForCode) {
+        NSURLComponents *components = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:NO];
+        
+        __block NSString *code;
+        
+        [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *item, NSUInteger idx, BOOL *stop) {
+            if( [item.name isEqualToString:@"code"]) {
+                *stop = YES;
+                code = item.value.copy;
+            }
+        }];
+        
+        if( code) {
+            [self requestAccessTokenActionWithCode:code];
+            
+            
+            return NO; // no need to load the page
+        }
+    }
+    
+    
     return YES;
 }
 
 
-- (void)requestAccessTokenActionWithCode:(NSString *)code{
+- (void)requestAccessTokenActionWithCode:(NSString *)code
+{
     [self.uberAPI requestAccessTokenWithAuthorizationCode:code result:^(NSDictionary *jsonDict, NSError *error){
         
         if (_resultCallBack) {
