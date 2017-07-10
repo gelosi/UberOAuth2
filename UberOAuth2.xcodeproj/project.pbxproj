@@ -15,6 +15,7 @@
 		0A91A0031C4DE00900A1FB34 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A91A0011C4DE00900A1FB34 /* LaunchScreen.storyboard */; };
 		0A91A00D1C4DE14500A1FB34 /* UberLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */; };
 		0ADD752A1C4E3BFE0089A399 /* UberAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD75291C4E3BFE0089A399 /* UberAPI.m */; };
+		7C6690AC1F13930200958511 /* UberAPIAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6690AB1F13930200958511 /* UberAPIAccessToken.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberLoginWebViewController.m; sourceTree = "<group>"; };
 		0ADD75281C4E3BFE0089A399 /* UberAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UberAPI.h; sourceTree = "<group>"; };
 		0ADD75291C4E3BFE0089A399 /* UberAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberAPI.m; sourceTree = "<group>"; };
+		7C6690AA1F13930200958511 /* UberAPIAccessToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UberAPIAccessToken.h; sourceTree = "<group>"; };
+		7C6690AB1F13930200958511 /* UberAPIAccessToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberAPIAccessToken.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,8 @@
 				0A91A00C1C4DE14500A1FB34 /* UberLoginWebViewController.m */,
 				0ADD75281C4E3BFE0089A399 /* UberAPI.h */,
 				0ADD75291C4E3BFE0089A399 /* UberAPI.m */,
+				7C6690AA1F13930200958511 /* UberAPIAccessToken.h */,
+				7C6690AB1F13930200958511 /* UberAPIAccessToken.m */,
 			);
 			path = UberOAuth2;
 			sourceTree = "<group>";
@@ -167,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C6690AC1F13930200958511 /* UberAPIAccessToken.m in Sources */,
 				0A919FFB1C4DE00900A1FB34 /* ViewController.m in Sources */,
 				0A919FF81C4DE00900A1FB34 /* AppDelegate.m in Sources */,
 				0ADD752A1C4E3BFE0089A399 /* UberAPI.m in Sources */,
