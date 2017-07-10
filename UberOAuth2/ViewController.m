@@ -39,7 +39,9 @@
     
     _uberAPI = [[UberAPI alloc] initWithClientID:@""
                                           secret:@""
-                                         rootURL:[NSURL URLWithString:@"https://api.uber.com.cn/"]];
+                                          apiURL:[NSURL URLWithString:@"https://api.uber.com"]
+                                        loginURL:[NSURL URLWithString:@"https://login.uber.com"]];
+    
     _uberAPI.redirectURL = @"http://localhost";
 
 }

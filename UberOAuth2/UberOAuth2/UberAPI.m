@@ -10,14 +10,15 @@
 
 @implementation UberAPI
 
-- (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret rootURL:(NSURL *)rootURL
+- (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret apiURL:(NSURL *)apiURL loginURL:(NSURL *)loginURL
 {
     self = [super init];
     
     if ( self) {
         _clientID = clientID.copy;
         _clientSecret = clientSecret.copy;
-        _rootURL = rootURL.copy;
+        _apiURL = apiURL.copy;
+        _loginURL = loginURL.copy;
     }
     
     return self;
@@ -25,7 +26,7 @@
 
 - (NSURL *)autorizationURLStringWithScope:(NSString *)scope
 {
-    NSURL *url = [self.rootURL URLByAppendingPathComponent:@"oauth/v2/authorize"];
+    NSURL *url = [self.loginURL URLByAppendingPathComponent:@"oauth/v2/authorize"];
     
     NSString *query=[NSString stringWithFormat:@"client_id=%@&response_type=code&scope=%@",_clientID, scope];
     
@@ -40,9 +41,9 @@
     return componets.URL;
 }
 
-- (void)requestAccessTokenWithAuthorizationCode:(NSString *)code result:(UberAPIResultBlock)requestResult
+- (void)requestAccessTokenWithAuthorizationCode:(NSString *)code result:(UberAPILoginCompletion)requestResult
 {
-    NSURL *url = [self.rootURL URLByAppendingPathComponent:@"/oauth/v2/token"];
+    NSURL *url = [self.loginURL URLByAppendingPathComponent:@"/oauth/v2/token"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     
@@ -65,7 +66,7 @@
         }
         
         if (requestResult) {
-            requestResult(responseObject, error);
+            requestResult(accessToken, error);
         }
         
     }];
@@ -75,10 +76,43 @@
     
 }
 
-
-- (void)requestUserProfileWithResult:(UberAPIResultBlock)requestResult
+- (void)requestAccessTokenWithRefreshToken:(UberAPILoginCompletion)requestResult
 {
-    NSURL *URL = [NSURL URLWithString:@"https://api.uber.com/v1.2/me"];
+    NSURL *url = [self.loginURL URLByAppendingPathComponent:@"/oauth/v2/token"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    
+    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&grant_type=refresh_token&refresh_token=%@",_clientSecret, _clientID, self.accessToken.refreshToken];
+    
+    if( self.redirectURL) {
+        postBodyString = [postBodyString stringByAppendingFormat:@"&redirect_uri=%@", self.redirectURL];
+    }
+    
+    NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:bodyData];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        UberAPIAccessToken *accessToken = [[UberAPIAccessToken alloc] initWithDictionary:responseObject];
+        
+        if( accessToken.isNotEmpty) {
+            self.accessToken = accessToken;
+        }
+        
+        if (requestResult) {
+            requestResult(accessToken, error);
+        }
+        
+    }];
+    
+    [task resume];
+}
+
+
+- (void)requestUserProfileWithResult:(UberAPIRequestCompletion)requestResult
+{
+    NSURL *URL = [self.apiURL URLByAppendingPathComponent:@"/v1.2/me"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     
     [request setHTTPMethod:@"GET"];

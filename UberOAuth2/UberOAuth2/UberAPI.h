@@ -12,24 +12,28 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^UberAPIResultBlock)(NSDictionary *responseObject, NSError *error);
+typedef void (^UberAPIRequestCompletion)(NSDictionary *responseObject, NSError *error);
+typedef void (^UberAPILoginCompletion)(UberAPIAccessToken *accessToken, NSError *error);
 
 @interface UberAPI : NSObject
 
 @property (nonatomic, readonly) NSString *clientID;
 @property (nonatomic, readonly) NSString *clientSecret;
-@property (nonatomic, readonly) NSURL *rootURL;
+@property (nonatomic, readonly) NSURL *apiURL;
+@property (nonatomic, readonly) NSURL *loginURL;
 
 @property (nonatomic, copy, nullable) NSString *redirectURL;
 @property (nonatomic, copy, nullable) UberAPIAccessToken *accessToken;
 
-- (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret rootURL:(NSURL *)rootURL;
+- (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret apiURL:(NSURL *)apiURL loginURL:(NSURL *)loginURL;
 
 - (NSURL *)autorizationURLStringWithScope:(NSString *)scope;
 
-- (void)requestAccessTokenWithAuthorizationCode:(NSString *)code result:(UberAPIResultBlock)requestResult;
+- (void)requestAccessTokenWithAuthorizationCode:(NSString *)code result:(UberAPILoginCompletion)requestResult;
 
-- (void)requestUserProfileWithResult:(UberAPIResultBlock)requestResult;
+- (void)requestAccessTokenWithRefreshToken:(UberAPILoginCompletion)requestResult;
+
+- (void)requestUserProfileWithResult:(UberAPIRequestCompletion)requestResult;
 
 @end
 
