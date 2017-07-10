@@ -12,12 +12,13 @@
 
 
 @interface ViewController ()<UIAlertViewDelegate>
-
+@property (nonatomic) UberAPI *uberAPI;
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     UIButton *loginBut=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -35,12 +36,18 @@
     [requestUserProfileBut setTitle:@"Request User Profile" forState:UIControlStateNormal];
     [requestUserProfileBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [requestUserProfileBut addTarget:self action:@selector(requestUserProfileButAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    _uberAPI = [[UberAPI alloc] initWithClientID:@""
+                                          secret:@""
+                                         rootURL:[NSURL URLWithString:@"https://api.uber.com.cn/"]];
+    _uberAPI.redirectURL = @"http://localhost";
 
 }
 
-- (void)loginButAction{
-    if (ClientId.length<1 || ClientSecret.length<1 || RedirectUrl.length<1 ) {
-        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+- (void)loginButAction
+{
+    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 ) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret\n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
         return;
 
@@ -55,10 +62,11 @@
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
-    NSString *url=[NSString stringWithFormat:@"https://login.uber.com.cn/oauth/v2/authorize?client_id=%@&redirect_url=%@&response_type=code&scope=profile history places history_lite",ClientId,RedirectUrl ];
-    NSString *encodedUrlString = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    webViewController.urlString=encodedUrlString;
-    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+    
+    
+    webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
+    webViewController.uberAPI = self.uberAPI;
+    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSError *error){
         NSLog(@"access token %@ ",jsonDict);
         
         if (error) {
@@ -78,7 +86,7 @@
 
 
 - (void)requestUserProfileButAction{
-    if (ClientId.length<1 || ClientSecret.length<1 || RedirectUrl.length<1 ) {
+    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 ) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
         return;
@@ -96,7 +104,7 @@
 }
 
 - (void)userProfileRequest{
-    [UberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+    [self.uberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSError *error){
         NSLog(@"user profile %@ ",jsonDict);
         if (jsonDict) {
             // 主线程执行：

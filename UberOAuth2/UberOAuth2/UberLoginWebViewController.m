@@ -47,14 +47,16 @@
     UIWebView *webView=[[UIWebView alloc] initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height-64)];
     [self.view addSubview:webView];
     webView.delegate=self;
-    [webView loadRequest:[[NSURLRequest alloc]initWithURL:[NSURL URLWithString:_urlString]] ];
+    if( self.autorizationURL) {
+        [webView loadRequest:[[NSURLRequest alloc]initWithURL:self.autorizationURL] ];
+    }
 
 }
 - (void)backBtAction
 {
     if (_resultCallBack) {
         NSError *aError = [NSError errorWithDomain:@"error1" code:1 userInfo:nil];
-        _resultCallBack(nil,nil,aError);
+        _resultCallBack(nil,aError);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -85,16 +87,16 @@
 
 
 - (void)requestAccessTokenActionWithCode:(NSString *)code{
-    [UberAPI requestAccessTokenWithAuthorizationCode:code result:^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+    [self.uberAPI requestAccessTokenWithAuthorizationCode:code result:^(NSDictionary *jsonDict, NSError *error){
         
         if (_resultCallBack) {
             if (jsonDict) {
-                _resultCallBack(jsonDict,response,nil);
+                _resultCallBack(jsonDict,nil);
 
             }else{
                 NSError *aError = [NSError errorWithDomain:@"error2" code:2 userInfo:nil];
 
-                _resultCallBack(jsonDict,response,aError);
+                _resultCallBack(jsonDict,aError);
 
             }
         }
