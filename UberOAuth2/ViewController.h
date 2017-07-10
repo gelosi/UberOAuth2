@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UberLoginWebViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UberLoginWebViewControllerDelegate>
 
 
 @end

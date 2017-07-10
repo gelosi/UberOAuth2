@@ -55,7 +55,32 @@
     // read token, if any
     
     _uberAPI.accessToken = [self loadToken];
+}
 
+- (void)loginController:(UberLoginWebViewController *)controller didLoginWithToken:(UberAPIAccessToken *)token
+{
+    NSLog(@"access token %@ ",token.accessToken);
+    
+    // save token here, if needed
+    
+    [self saveToken:token];
+    [self requestUserProfileButAction];
+        
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)loginController:(UberLoginWebViewController *)controller didFailWithError:(NSError *)error
+{
+    
+    if ([error.domain isEqualToString:@"error2"]) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+        [alerView show];
+    }
+}
+
+- (void)loginControllerDidCancel:(UberLoginWebViewController *)controller
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UberAPIAccessToken *)loadToken
@@ -100,24 +125,9 @@
     
     webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
     webViewController.uberAPI = self.uberAPI;
-    webViewController.resultCallBack=^(UberAPIAccessToken *token, NSError *error){
-        NSLog(@"access token %@ ",token.accessToken);
-        
-        // save token here, if needed
-        
-        [self saveToken:token];
-        
-        if (error) {
-            if ([error.domain isEqualToString:@"error2"]) {
-                UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
-                [alerView show];
-            }
-        }else{
-            [self requestUserProfileButAction];
-            
-        }
-        
-    };
+    webViewController.title = @"Uber OAuth2";
+    webViewController.backButtonTitle = @"back";
+    webViewController.delegate = self;
     
     [self presentViewController:webViewController animated:YES completion:nil];
 }
@@ -207,7 +217,7 @@
         [self loginButAction];
     }
     
-    if( alertView.tag == 1 && buttonIndex == alertView.cancelButtonIndex) {
+    if( alertView.tag == 1 && buttonIndex != alertView.cancelButtonIndex) {
         [self refreshTokenAction];
     }
 
