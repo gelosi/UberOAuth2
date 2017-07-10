@@ -8,6 +8,8 @@
 
 @import Foundation;
 
+#import "UberAPIAccessToken.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^UberAPIResultBlock)(NSDictionary *responseObject, NSError *error);
@@ -18,9 +20,8 @@ typedef void (^UberAPIResultBlock)(NSDictionary *responseObject, NSError *error)
 @property (nonatomic, readonly) NSString *clientSecret;
 @property (nonatomic, readonly) NSURL *rootURL;
 
-@property (nonatomic, copy, nullable) NSString *autorizationCode;
-
 @property (nonatomic, copy, nullable) NSString *redirectURL;
+@property (nonatomic, copy, nullable) UberAPIAccessToken *accessToken;
 
 - (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret rootURL:(NSURL *)rootURL;
 

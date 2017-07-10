@@ -46,7 +46,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     
-    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&grant_type=authorization_code&code=%@",_clientSecret, _clientID, self.autorizationCode];
+    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&grant_type=authorization_code&code=%@",_clientSecret, _clientID, code];
     
     if( self.redirectURL) {
         postBodyString = [postBodyString stringByAppendingFormat:@"&redirect_uri=%@", self.redirectURL];
@@ -58,10 +58,14 @@
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
         
-        [[NSUserDefaults standardUserDefaults] setObject:[responseObject objectForKey:@"access_token"] forKey:@"access_token"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        UberAPIAccessToken *accessToken = [[UberAPIAccessToken alloc] initWithDictionary:responseObject];
+        
+        if( accessToken.isNotEmpty) {
+            self.accessToken = accessToken;
+        }
+        
         if (requestResult) {
-            requestResult(responseObject,error);
+            requestResult(responseObject, error);
         }
         
     }];
@@ -74,13 +78,13 @@
 
 - (void)requestUserProfileWithResult:(UberAPIResultBlock)requestResult
 {
-    NSURL *URL = [self.rootURL URLByAppendingPathComponent:@"v1/me"];
+    NSURL *URL = [NSURL URLWithString:@"https://api.uber.com/v1.2/me"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     
-    NSString *token=[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"];
     [request setHTTPMethod:@"GET"];
     
-    [request setValue:[NSString stringWithFormat:@"Bearer %@",token] forHTTPHeaderField:@"Authorization"];
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",self.accessToken.accessToken] forHTTPHeaderField:@"Authorization"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
