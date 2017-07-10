@@ -14,34 +14,51 @@ clientid and clientsecret,redirecturl,and so on.
 #### Podfile
 
 ```ruby
-platform :ios, '7.0'
-pod 'UberOAuth2', '~> 0.1.1'
+platform :ios, '8.0'
+pod 'UberOAuth2', '~> 0.2'
 ```
-
 
 #### Instruction
 OAuth2 login
-<pre>
-	UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
-    NSString *urlString=[NSString stringWithFormat:@"https://login.uber.com.cn/oauth/v2/authorize?client_id=%@&redirect_url=%@&response_type=code&scope=profile history places history_lite",ClientId,RedirectUrl ];
-    NSString *encodedUrlString = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+```objective-c
+
+    _uberAPI = [[UberAPI alloc] initWithClientID:@""
+                                          secret:@""
+                                          apiURL:[NSURL URLWithString:@"https://api.uber.com"]
+                                        loginURL:[NSURL URLWithString:@"https://login.uber.com"]];
+
+
+    UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
+    
+    webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
     webViewController.urlString=encodedUrlString;
-    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
-        NSLog(@"access token %@ ",jsonDict);
-    };
+    webViewController.uberAPI = self.uberAPI;
+    webViewController.title = @"Uber OAuth2";
+    webViewController.backButtonTitle = @"back";
+    webViewController.delegate = self;
+
     [self presentViewController:webViewController animated:YES completion:nil];
 
-</pre>
+```
 
 
 get user profile through accesstoken
 
-<pre>
-    [UberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+```objective-c
+
+    [_uberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSError *error){
         NSLog(@"user profile %@ ",jsonDict);
+        if (jsonDict) {
+            //// 主线程执行：
+            .....
+            });
+
+        }
+        
     }];
 
-</pre>
+```
+
 #### Uber OAuth2 Flow
 
 <img  src="https://github.com/uberHackathon/UberOAuth2/blob/master/uberoauth2.png" width="421" height="365">
@@ -53,4 +70,3 @@ get user profile through accesstoken
 #### Licenses
 
 All source code is licensed under the [MIT License](https://github.com/by-the-way/UberOAuth2/blob/master/LICENSE).
-
