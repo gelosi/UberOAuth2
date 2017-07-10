@@ -27,7 +27,7 @@
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont systemFontOfSize:19.0]];
     titleText.textAlignment=NSTextAlignmentCenter;
-    titleText.text=@"Uber OAuth2";
+    titleText.text = self.title;
     
     self.view.backgroundColor=[UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets=NO;
@@ -39,7 +39,7 @@
 
     UIButton *backBt=[UIButton buttonWithType:UIButtonTypeCustom];
     backBt.frame=CGRectMake(10, 27, 35, 30);
-    [backBt setTitle:@"back" forState:UIControlStateNormal];
+    [backBt setTitle:self.backButtonTitle forState:UIControlStateNormal];
     backBt.titleLabel.font=[UIFont systemFontOfSize:15];
     [backBt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [backBt addTarget:self action:@selector(backBtAction) forControlEvents:UIControlEventTouchUpInside];
@@ -55,11 +55,7 @@
 }
 - (void)backBtAction
 {
-    if (_resultCallBack) {
-        NSError *aError = [NSError errorWithDomain:@"error1" code:1 userInfo:nil];
-        _resultCallBack(nil,aError);
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate loginControllerDidCancel:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -103,19 +99,11 @@
 {
     [self.uberAPI requestAccessTokenWithAuthorizationCode:code result:^(UberAPIAccessToken *accessToken, NSError *error){
         
-        if (_resultCallBack) {
-            if (accessToken) {
-                _resultCallBack(accessToken,nil);
-
-            }else{
-                NSError *aError = [NSError errorWithDomain:@"error2" code:2 userInfo:nil];
-
-                _resultCallBack(nil,aError);
-
-            }
+        if( error == nil) {
+            [self.delegate loginController:self didLoginWithToken:accessToken];
+        } else {
+            [self.delegate loginController:self didFailWithError:error];
         }
-        [self dismissViewControllerAnimated:YES completion:nil];
-
     }];
 
 }

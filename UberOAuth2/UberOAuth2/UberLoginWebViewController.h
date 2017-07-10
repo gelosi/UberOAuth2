@@ -8,11 +8,26 @@
 
 #import <UIKit/UIKit.h>
 
-@class UberAPI, UberAPIAccessToken;
+NS_ASSUME_NONNULL_BEGIN
+
+@class UberAPI, UberAPIAccessToken, UberLoginWebViewController;
+
+@protocol UberLoginWebViewControllerDelegate <NSObject>
+
+- (void)loginController:(UberLoginWebViewController *)controller didLoginWithToken:(UberAPIAccessToken *)token;
+- (void)loginController:(UberLoginWebViewController *)controller didFailWithError:(NSError *)error;
+
+- (void)loginControllerDidCancel:(UberLoginWebViewController *)controller;
+@end
 
 @interface UberLoginWebViewController : UIViewController
-@property(nonatomic,strong) NSURL *autorizationURL;//LoginWebViewController 's url
+@property(nonatomic, strong) NSURL *autorizationURL;//LoginWebViewController 's url
 @property(nonatomic) UberAPI *uberAPI;
-@property(nonatomic,copy) void (^resultCallBack) (UberAPIAccessToken *token, NSError *error);// login callback
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) NSString *backButtonTitle;
+
+@property(nonatomic, weak) id<UberLoginWebViewControllerDelegate> delegate;
 
 @end
+
+NS_ASSUME_NONNULL_END
