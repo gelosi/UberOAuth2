@@ -85,7 +85,7 @@
 
 
 - (void)requestAccessTokenActionWithCode:(NSString *)code{
-    [UberAPI requestAccessTokenWithAuthorationCode:code result:^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
+    [UberAPI requestAccessTokenWithAuthorizationCode:code result:^(NSDictionary *jsonDict, NSURLResponse *response, NSError *error){
         
         if (_resultCallBack) {
             if (jsonDict) {

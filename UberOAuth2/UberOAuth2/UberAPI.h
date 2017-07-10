@@ -6,16 +6,30 @@
 //  Copyright © 2016年 coderyi. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#define ClientId @""
-#define ClientSecret @""
-#define RedirectUrl @""
+@import Foundation;
 
-typedef void (^ RequestResult)(NSDictionary *jsonDict, NSURLResponse *response, NSError *error);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^UberAPIResultBlock)(NSDictionary *responseObject, NSError *error);
 
 @interface UberAPI : NSObject
 
-+ (void)requestAccessTokenWithAuthorationCode:(NSString *)code result:(void(^)(NSDictionary *jsonDict, NSURLResponse *response, NSError *error))requestResult;
+@property (nonatomic, readonly) NSString *clientID;
+@property (nonatomic, readonly) NSString *clientSecret;
+@property (nonatomic, readonly) NSURL *rootURL;
 
-+ (void)requestUserProfileWithResult:(void(^)(NSDictionary *jsonDict, NSURLResponse *response, NSError *error))requestResult;
+@property (nonatomic, copy, nullable) NSString *autorizationCode;
+
+@property (nonatomic, copy, nullable) NSString *redirectURL;
+
+- (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret rootURL:(NSURL *)rootURL;
+
+- (NSURL *)autorizationURLStringWithScope:(NSString *)scope;
+
+- (void)requestAccessTokenWithAuthorizationCode:(NSString *)code result:(UberAPIResultBlock)requestResult;
+
+- (void)requestUserProfileWithResult:(UberAPIResultBlock)requestResult;
+
 @end
+
+NS_ASSUME_NONNULL_END
