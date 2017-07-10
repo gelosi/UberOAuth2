@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class UberAPI;
+@class UberAPI, UberAPIAccessToken;
 
 @interface UberLoginWebViewController : UIViewController
 @property(nonatomic,strong) NSURL *autorizationURL;//LoginWebViewController 's url
 @property(nonatomic) UberAPI *uberAPI;
-@property(nonatomic,copy) void (^resultCallBack) (NSDictionary *jsonDict, NSError *error);// login callback
+@property(nonatomic,copy) void (^resultCallBack) (UberAPIAccessToken *token, NSError *error);// login callback
 
 @end

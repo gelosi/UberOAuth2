@@ -101,16 +101,16 @@
 
 - (void)requestAccessTokenActionWithCode:(NSString *)code
 {
-    [self.uberAPI requestAccessTokenWithAuthorizationCode:code result:^(NSDictionary *jsonDict, NSError *error){
+    [self.uberAPI requestAccessTokenWithAuthorizationCode:code result:^(UberAPIAccessToken *accessToken, NSError *error){
         
         if (_resultCallBack) {
-            if (jsonDict) {
-                _resultCallBack(jsonDict,nil);
+            if (accessToken) {
+                _resultCallBack(accessToken,nil);
 
             }else{
                 NSError *aError = [NSError errorWithDomain:@"error2" code:2 userInfo:nil];
 
-                _resultCallBack(jsonDict,aError);
+                _resultCallBack(nil,aError);
 
             }
         }
