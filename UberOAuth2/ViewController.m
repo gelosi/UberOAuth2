@@ -46,7 +46,7 @@
 
 - (void)loginButAction
 {
-    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 ) {
+    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 && self.uberAPI.redirectURL.length < 1) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret\n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
         return;
@@ -86,7 +86,7 @@
 
 
 - (void)requestUserProfileButAction{
-    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 ) {
+    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 && self.uberAPI.redirectURL.length < 1) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
         return;
