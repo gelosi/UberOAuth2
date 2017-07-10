@@ -31,7 +31,6 @@ OAuth2 login
     UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
     
     webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
-    webViewController.urlString=encodedUrlString;
     webViewController.uberAPI = self.uberAPI;
     webViewController.title = @"Uber OAuth2";
     webViewController.backButtonTitle = @"back";
@@ -45,6 +44,15 @@ OAuth2 login
 get user profile through accesstoken
 
 ```objective-c
+
+    // let's say you store token in the user defaults (because you can!)
+    NSData *tokenData = [[NSUserDefaults standardUserDefaults] objectForKey:@"UberAccessToken"];
+    UberAPIAccessToken *token = [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
+
+    // so, you didn't crash at the point above... so you assign token, and you can try...
+
+    _uberAPI.accessToken = token;
+    
 
     [_uberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSError *error){
         NSLog(@"user profile %@ ",jsonDict);
