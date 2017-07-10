@@ -85,22 +85,32 @@
 }
 
 
-- (void)requestUserProfileButAction{
+
+- (void)requestUserProfileButAction
+{
+    // guard #1
     if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 && self.uberAPI.redirectURL.length < 1) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret & redirecturl \n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
         [alerView show];
         return;
-        
     }
 
-    NSString *accessToken=[[NSUserDefaults standardUserDefaults] objectForKey:@"access_token"];
-    if (!accessToken || accessToken.length<1) {
+    // guard #2
+    if (!self.uberAPI.accessToken.isNotEmpty) {
         UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"please login first" delegate:self cancelButtonTitle:@"sure" otherButtonTitles:@"cancel", nil];
         [alerView show];
-    }else{
-        [self userProfileRequest];
-    
+        return;
     }
+    
+    // guard #3
+    if( self.uberAPI.accessToken.isExpired) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"Access token expired. Refresh token or login again?" delegate:self cancelButtonTitle:@"Login" otherButtonTitles:@"Token", nil];
+        alerView.tag = 1; // this one has special dialor, right...
+        [alerView show];
+        return;
+    }
+
+    [self userProfileRequest];
 }
 
 - (void)userProfileRequest{
