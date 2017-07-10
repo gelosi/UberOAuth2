@@ -29,9 +29,17 @@
     [loginBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBut addTarget:self action:@selector(loginButAction) forControlEvents:UIControlEventTouchUpInside];
     
+    UIButton *refreshTokenBut = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:refreshTokenBut];
+    refreshTokenBut.frame=CGRectMake(([[UIScreen mainScreen] bounds].size.width-200)/2, 200, 200, 50);
+    refreshTokenBut.backgroundColor=[UIColor colorWithRed:0.04f green:0.03f blue:0.11f alpha:1.00f];
+    [refreshTokenBut setTitle:@"Refresh Token" forState:UIControlStateNormal];
+    [refreshTokenBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [refreshTokenBut addTarget:self action:@selector(refreshTokenAction) forControlEvents:UIControlEventTouchUpInside];
+    
     UIButton *requestUserProfileBut=[UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:requestUserProfileBut];
-    requestUserProfileBut.frame=CGRectMake(([[UIScreen mainScreen] bounds].size.width-200)/2, 200, 200, 50);
+    requestUserProfileBut.frame=CGRectMake(([[UIScreen mainScreen] bounds].size.width-200)/2, 300, 200, 50);
     requestUserProfileBut.backgroundColor=[UIColor colorWithRed:0.04f green:0.03f blue:0.11f alpha:1.00f];
     [requestUserProfileBut setTitle:@"Request User Profile" forState:UIControlStateNormal];
     [requestUserProfileBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -43,7 +51,31 @@
                                         loginURL:[NSURL URLWithString:@"https://login.uber.com"]];
     
     _uberAPI.redirectURL = @"http://localhost";
+    
+    // read token, if any
+    
+    _uberAPI.accessToken = [self loadToken];
 
+}
+
+- (UberAPIAccessToken *)loadToken
+{
+    UberAPIAccessToken *token;
+    
+    @try {
+        token = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"UberAccessToken"]];
+    } @catch (NSException *exception) {
+        NSLog(@"Can not load token: %@", exception);
+    }
+    
+    return token;
+}
+
+- (void)saveToken:(UberAPIAccessToken *)token
+{
+    if( token) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:token] forKey:@"UberAccessToken"];
+    }
 }
 
 - (void)loginButAction
@@ -68,8 +100,12 @@
     
     webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
     webViewController.uberAPI = self.uberAPI;
-    webViewController.resultCallBack=^(NSDictionary *jsonDict, NSError *error){
-        NSLog(@"access token %@ ",jsonDict);
+    webViewController.resultCallBack=^(UberAPIAccessToken *token, NSError *error){
+        NSLog(@"access token %@ ",token.accessToken);
+        
+        // save token here, if needed
+        
+        [self saveToken:token];
         
         if (error) {
             if ([error.domain isEqualToString:@"error2"]) {
@@ -86,6 +122,36 @@
     [self presentViewController:webViewController animated:YES completion:nil];
 }
 
+- (void)refreshTokenAction
+{
+    if (self.uberAPI.clientSecret.length < 1 && self.uberAPI.clientID.length < 1 && self.uberAPI.redirectURL.length < 1) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you need clientid & clientsecret\n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+        [alerView show];
+        return;
+        
+    }
+    
+    if (!self.uberAPI.accessToken.isNotEmpty) {
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"you have no valid token. Login First!\n" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+        [alerView show];
+        return;
+        
+    }
+
+    
+    [self.uberAPI requestAccessTokenWithRefreshToken:^(UberAPIAccessToken *accessToken, NSError *error) {
+        if (error) {
+            if ([error.domain isEqualToString:@"error3"]) {
+                UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login with refresh token fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
+                [alerView show];
+            }
+        }else{
+            [self saveToken:accessToken];
+            [self requestUserProfileButAction];
+            
+        }
+    }];
+}
 
 
 - (void)requestUserProfileButAction
@@ -133,9 +199,16 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex==0) {
+    if ( alertView.tag != 1 && buttonIndex==0) {
         [self loginButAction];
-
+    }
+    
+    if( alertView.tag == 1 && buttonIndex == alertView.cancelButtonIndex) {
+        [self loginButAction];
+    }
+    
+    if( alertView.tag == 1 && buttonIndex == alertView.cancelButtonIndex) {
+        [self refreshTokenAction];
     }
 
 }
