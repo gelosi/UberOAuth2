@@ -41,17 +41,25 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
 {
+    NSNumber *expires_in = dictionary[@"expires_in"];
+    NSDate *expirationDate;
+    if( expires_in) {
+        expirationDate = [NSDate dateWithTimeIntervalSinceNow:expires_in.doubleValue];
+    }
+    
+    return [self initWithAccessToken:dictionary[@"access_token"]
+                        refreshToken:dictionary[@"refresh_token"]
+                      expirationDate:expirationDate];
+}
+
+- (instancetype)initWithAccessToken:(NSString *)accessToken refreshToken:(NSString *)refreshToken expirationDate:(NSDate *)expiration
+{
     self = [super init];
     
     if ( self) {
-        _accessToken = [dictionary[@"access_token"] copy];
-        _refreshToken = [dictionary[@"refresh_token"] copy];
-        
-        NSNumber *expires_in = dictionary[@"expires_in"];
-        
-        if( expires_in) {
-            _expirationDate = [NSDate dateWithTimeIntervalSinceNow:expires_in.doubleValue];
-        }
+        _accessToken = accessToken.copy;
+        _refreshToken = refreshToken.copy;
+        _expirationDate = expiration.copy;
     }
     
     return self;
