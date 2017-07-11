@@ -71,11 +71,8 @@
 
 - (void)loginController:(UberLoginWebViewController *)controller didFailWithError:(NSError *)error
 {
-    
-    if ([error.domain isEqualToString:@"error2"]) {
-        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:@"login fail" delegate:nil cancelButtonTitle:@"sure" otherButtonTitles:nil, nil];
-        [alerView show];
-    }
+    UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alerView show];
 }
 
 - (void)loginControllerDidCancel:(UberLoginWebViewController *)controller
@@ -126,10 +123,9 @@
     webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
     webViewController.uberAPI = self.uberAPI;
     webViewController.title = @"Uber OAuth2";
-    webViewController.backButtonTitle = @"back";
     webViewController.delegate = self;
     
-    [self presentViewController:webViewController animated:YES completion:nil];
+    [self.navigationController pushViewController:webViewController animated:YES];
 }
 
 - (void)refreshTokenAction
