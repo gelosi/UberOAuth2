@@ -19,6 +19,7 @@
         _clientSecret = clientSecret.copy;
         _apiURL = apiURL.copy;
         _loginURL = loginURL.copy;
+        _completionQueue = [NSOperationQueue mainQueue];
     }
     
     return self;
@@ -66,7 +67,10 @@
         }
         
         if (requestResult) {
-            requestResult(accessToken, error);
+            [self.completionQueue addOperationWithBlock:^{
+                requestResult(accessToken, error);
+            }];
+
         }
         
     }];
@@ -101,7 +105,10 @@
         }
         
         if (requestResult) {
-            requestResult(accessToken, error);
+            [self.completionQueue addOperationWithBlock:^{
+                requestResult(accessToken, error);
+            }];
+
         }
         
     }];
@@ -124,14 +131,15 @@
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
         if (requestResult) {
-            requestResult(responseObject,error);
+            [self.completionQueue addOperationWithBlock:^{
+                requestResult(responseObject, error);
+            }];
+            
         }
         
     }];
     
     [task resume];
-    
-    
 }
 
 @end
