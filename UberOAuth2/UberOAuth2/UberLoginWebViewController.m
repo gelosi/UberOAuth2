@@ -17,39 +17,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    if ([[[UIDevice currentDevice]systemVersion] floatValue] >= 7.0) {
-        self.edgesForExtendedLayout = UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight;
-    }
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(([[UIScreen mainScreen] bounds].size.width-200)/2, 20, 200, 44)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont systemFontOfSize:19.0]];
-    titleText.textAlignment=NSTextAlignmentCenter;
-    titleText.text = self.title;
+    self.edgesForExtendedLayout = UIRectEdgeAll;
     
-    self.view.backgroundColor=[UIColor whiteColor];
-    self.automaticallyAdjustsScrollViewInsets=NO;
+    self.automaticallyAdjustsScrollViewInsets = YES;
     
-    UINavigationBar *bar=[[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 64)];
-    [self.view addSubview:bar];
-    bar.barTintColor=[UIColor colorWithRed:0.04f green:0.03f blue:0.11f alpha:1.00f];
-    [bar addSubview:titleText];
-
-    UIButton *backBt=[UIButton buttonWithType:UIButtonTypeCustom];
-    backBt.frame=CGRectMake(10, 27, 35, 30);
-    [backBt setTitle:self.backButtonTitle forState:UIControlStateNormal];
-    backBt.titleLabel.font=[UIFont systemFontOfSize:15];
-    [backBt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [backBt addTarget:self action:@selector(backBtAction) forControlEvents:UIControlEventTouchUpInside];
-    [bar addSubview:backBt];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     
-    UIWebView *webView=[[UIWebView alloc] initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height-64)];
+    webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     [self.view addSubview:webView];
-    webView.delegate=self;
+    webView.delegate = self;
+    
     if( self.autorizationURL) {
         [webView loadRequest:[[NSURLRequest alloc]initWithURL:self.autorizationURL] ];
+    } else {
+        [self.delegate loginController:self didFailWithError:[NSError errorWithDomain:@"uber.login.no_autorization_url" code:500 userInfo:nil]];
     }
 
 }
@@ -71,25 +54,27 @@
     BOOL shouldCheckForCode = self.uberAPI.redirectURL && [request.URL.absoluteString hasPrefix:self.uberAPI.redirectURL];
     
     if( shouldCheckForCode) {
-        NSURLComponents *components = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:NO];
         
-        __block NSString *code;
-        
-        [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *item, NSUInteger idx, BOOL *stop) {
-            if( [item.name isEqualToString:@"code"]) {
-                *stop = YES;
-                code = item.value.copy;
-            }
-        }];
+        NSString *code = [self extractValueNamed:@"code" fromUrlQuery:request.URL];
         
         if( code) {
             [self requestAccessTokenActionWithCode:code];
-            
             
             return NO; // no need to load the page
         }
     }
     
+    // failure case https://login.uber.com/oauth/errors
+    if( [request.URL.pathComponents containsObject:@"errors"]) {
+        
+        NSString *value = [self extractValueNamed:@"error" fromUrlQuery:request.URL];
+        
+        NSString *errorDomain = value ? [NSString stringWithFormat:@"uber.login.%@", value] : @"uber.login";
+        
+        NSError *error = [NSError errorWithDomain:errorDomain code:500 userInfo:nil];
+        
+        [self.delegate loginController:self didFailWithError:error];
+    }
     
     return YES;
 }
@@ -105,7 +90,20 @@
             [self.delegate loginController:self didFailWithError:error];
         }
     }];
+}
 
+- (NSString *)extractValueNamed:(NSString *)name fromUrlQuery:(NSURL *)url
+{
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    __block NSString *value;
+    [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *item, NSUInteger idx, BOOL *stop) {
+        if( [item.name isEqualToString:name]) {
+            *stop = YES;
+            value = item.value.copy;
+        }
+    }];
+
+    return value;
 }
 
 
