@@ -33,7 +33,6 @@ OAuth2 login
     webViewController.autorizationURL = [self.uberAPI autorizationURLStringWithScope:@"profile history places history_lite"];
     webViewController.uberAPI = self.uberAPI;
     webViewController.title = @"Uber OAuth2";
-    webViewController.backButtonTitle = @"back";
     webViewController.delegate = self;
 
     [self presentViewController:webViewController animated:YES completion:nil];
