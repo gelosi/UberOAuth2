@@ -15,7 +15,7 @@ clientid and clientsecret,redirecturl,and so on.
 
 ```ruby
 platform :ios, '8.0'
-pod 'UberOAuth2', '~> 0.2'
+pod 'UberOAuth2', '~> 0.3'
 ```
 
 #### Instruction
