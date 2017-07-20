@@ -116,6 +116,38 @@
     [task resume];
 }
 
+- (void)invalidateCurrentAccessToken:(UberAPILoginCompletion)requestResult
+{
+    NSURL *url = [self.loginURL URLByAppendingPathComponent:@"/oauth/v2/revoke"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    
+    NSString *postBodyString=[NSString stringWithFormat:@"client_secret=%@&client_id=%@&token=%@",_clientSecret, _clientID, self.accessToken.accessToken];
+    
+    if( self.redirectURL) {
+        postBodyString = [postBodyString stringByAppendingFormat:@"&redirect_uri=%@", self.redirectURL];
+    }
+    
+    NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:bodyData];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+
+        if( !error) {
+            self.accessToken = nil;
+        }
+        
+        if (requestResult) {
+            [self.completionQueue addOperationWithBlock:^{
+                requestResult( self.accessToken, error);
+            }];
+        }
+        
+    }];
+    
+    [task resume];
+}
+
 
 - (void)requestUserProfileWithResult:(UberAPIRequestCompletion)requestResult
 {

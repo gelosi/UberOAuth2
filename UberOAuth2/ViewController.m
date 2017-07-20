@@ -45,6 +45,14 @@
     [requestUserProfileBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [requestUserProfileBut addTarget:self action:@selector(requestUserProfileButAction) forControlEvents:UIControlEventTouchUpInside];
     
+    UIButton *logoutUserBut=[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:logoutUserBut];
+    logoutUserBut.frame=CGRectMake(([[UIScreen mainScreen] bounds].size.width-200)/2, 400, 200, 50);
+    logoutUserBut.backgroundColor=[UIColor colorWithRed:0.04f green:0.03f blue:0.11f alpha:1.00f];
+    [logoutUserBut setTitle:@"Logout" forState:UIControlStateNormal];
+    [logoutUserBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [logoutUserBut addTarget:self action:@selector(logoutAction) forControlEvents:UIControlEventTouchUpInside];
+    
     _uberAPI = [[UberAPI alloc] initWithClientID:@""
                                           secret:@""
                                           apiURL:[NSURL URLWithString:@"https://api.uber.com"]
@@ -159,6 +167,24 @@
     }];
 }
 
+- (void)logoutAction
+{
+    [self.uberAPI invalidateCurrentAccessToken:^(UberAPIAccessToken *accessToken, NSError *error) {
+        
+        NSString *message = @"Logout Successful";
+        NSString *dialog = @"Bye bye";
+        
+        if (error) {
+            message = error.localizedDescription;
+            dialog = @"meh";
+        }
+        
+        UIAlertView *alerView=[[UIAlertView alloc] initWithTitle:@"logout" message:message delegate:nil cancelButtonTitle:dialog otherButtonTitles:nil, nil];
+        [alerView show];
+
+    }];
+}
+
 
 - (void)requestUserProfileButAction
 {
@@ -187,7 +213,8 @@
     [self userProfileRequest];
 }
 
-- (void)userProfileRequest{
+- (void)userProfileRequest
+{
     [self.uberAPI requestUserProfileWithResult:^(NSDictionary *jsonDict, NSError *error){
         NSLog(@"user profile %@ ",jsonDict);
         if (jsonDict) {
@@ -204,7 +231,8 @@
     }];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
     if ( alertView.tag != 1 && buttonIndex==0) {
         [self loginButAction];
     }

@@ -35,6 +35,8 @@ typedef void (^UberAPILoginCompletion)(UberAPIAccessToken *accessToken, NSError 
 
 - (void)requestAccessTokenWithRefreshToken:(UberAPILoginCompletion)requestResult;
 
+- (void)invalidateCurrentAccessToken:(UberAPILoginCompletion)requestResult;
+
 - (void)requestUserProfileWithResult:(UberAPIRequestCompletion)requestResult;
 
 @end
