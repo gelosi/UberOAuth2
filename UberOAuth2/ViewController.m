@@ -116,14 +116,6 @@
         return;
 
     }
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (cookie in [storage cookies])
-    {
-        [storage deleteCookie:cookie];
-    }
-    //    缓存  清除
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     UberLoginWebViewController *webViewController=[[UberLoginWebViewController alloc] init];
     
