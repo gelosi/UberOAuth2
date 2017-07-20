@@ -65,7 +65,10 @@
     }
     
     // failure case https://login.uber.com/oauth/errors
-    if( [request.URL.pathComponents containsObject:@"errors"]) {
+    NSSet *errors = [NSSet setWithObjects:@"error", @"errors", nil];
+    NSSet *components = [NSSet setWithArray:request.URL.pathComponents];
+    
+    if( [components intersectsSet:errors]) {
         
         NSString *value = [self extractValueNamed:@"error" fromUrlQuery:request.URL];
         
