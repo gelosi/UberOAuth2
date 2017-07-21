@@ -51,18 +51,17 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    BOOL shouldCheckForCode = self.uberAPI.redirectURL && [request.URL.absoluteString hasPrefix:self.uberAPI.redirectURL];
+    BOOL shouldCheckForCode = YES;
     
-    if( shouldCheckForCode) {
-        
-        NSString *code = [self extractValueNamed:@"code" fromUrlQuery:request.URL];
-        
-        if( code) {
-            [self requestAccessTokenActionWithCode:code];
-            
-            return NO; // no need to load the page
-        }
+    NSError *error;
+    
+    NSString *errorString = [self extractValueNamed:@"error" fromUrlQuery:request.URL];
+    
+    if( errorString) {
+        NSString *errorDomain = [NSString stringWithFormat:@"uber.login.%@", errorString];
+        error = [NSError errorWithDomain:errorDomain code:500 userInfo:nil];
     }
+    
     
     // failure case https://login.uber.com/oauth/errors
     NSSet *errors = [NSSet setWithObjects:@"error", @"errors", nil];
@@ -74,10 +73,34 @@
         
         NSString *errorDomain = value ? [NSString stringWithFormat:@"uber.login.%@", value] : @"uber.login";
         
-        NSError *error = [NSError errorWithDomain:errorDomain code:500 userInfo:nil];
-        
-        [self.delegate loginController:self didFailWithError:error];
+        NSDictionary *underlyingError = nil;
+        if( error) {
+            underlyingError = @{NSUnderlyingErrorKey : error };
+        }
+
+        error = [NSError errorWithDomain:errorDomain code:500 userInfo:underlyingError];
     }
+    
+    if( self.uberAPI.redirectURL) {
+        shouldCheckForCode = [request.URL.absoluteString hasPrefix:self.uberAPI.redirectURL];
+    }
+    
+    if( error) {
+        [self.delegate loginController:self didFailWithError:error];
+        shouldCheckForCode = NO;
+    }
+    
+    if( shouldCheckForCode) {
+        
+        NSString *code = [self extractIdioticallyFormattedUberAutorizationCodeFromUrl:request.URL];
+        
+        if( code) {
+            [self requestAccessTokenActionWithCode:code];
+            
+            return NO; // no need to load the page
+        }
+    }
+
     
     return YES;
 }
@@ -107,6 +130,28 @@
     }];
 
     return value;
+}
+
+- (NSString *)extractIdioticallyFormattedUberAutorizationCodeFromUrl:(NSURL *)url
+{
+    // Uber saiz:
+    // https://your-redirect-uri/?code=AUTHORIZATION_CODE
+    // Uber does:
+    // https://your-redirect-uri/?code=abcabc#_ <- yes! #_ - is a part of code!!!!
+    // Conclusion: ****rs!
+    
+    NSString *potentialCode = [self extractValueNamed:@"code" fromUrlQuery:url];
+    
+    if( potentialCode) {
+        NSString *realCode = [url.absoluteString componentsSeparatedByString:@"?code="].lastObject;
+        
+        // just because, you know... Uber...
+        realCode = [realCode componentsSeparatedByString:@"&"].firstObject;
+        
+        return realCode;
+    }
+    
+    return nil;
 }
 
 
