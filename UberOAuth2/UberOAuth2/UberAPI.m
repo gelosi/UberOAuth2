@@ -64,6 +64,23 @@
         
         if( accessToken.isNotEmpty) {
             self.accessToken = accessToken;
+        } else if(!error){
+            NSInteger code = 500;
+            
+            if( [response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                code = httpResponse.statusCode;
+            }
+            
+            NSString *errorString = responseObject[@"error"];
+            
+            if( errorString) {
+                errorString = [@"uber.login." stringByAppendingString:errorString];
+            } else {
+                errorString = @"uber.login";
+            }
+            
+            error = [NSError errorWithDomain:errorString code:code userInfo:nil];
         }
         
         if (requestResult) {
