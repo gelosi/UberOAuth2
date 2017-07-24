@@ -53,6 +53,7 @@
     [logoutUserBut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [logoutUserBut addTarget:self action:@selector(logoutAction) forControlEvents:UIControlEventTouchUpInside];
     
+    
     _uberAPI = [[UberAPI alloc] initWithClientID:@""
                                           secret:@""
                                           apiURL:[NSURL URLWithString:@"https://api.uber.com"]
@@ -124,6 +125,20 @@
     webViewController.uberAPI = self.uberAPI;
     webViewController.title = @"Uber OAuth2";
     webViewController.delegate = self;
+    
+    UILabel *loadingText = [UILabel new];
+    
+    loadingText.text = @"L O A D I N G";
+    loadingText.backgroundColor = UIColor.lightGrayColor;
+    loadingText.textColor = UIColor.whiteColor;
+    loadingText.font = [UIFont boldSystemFontOfSize:22];
+    loadingText.translatesAutoresizingMaskIntoConstraints = NO;
+    loadingText.layer.cornerRadius = 6;
+    loadingText.layer.masksToBounds = YES;
+    [loadingText sizeToFit];
+    
+    webViewController.loadingView = loadingText;
+
     
     [self.navigationController pushViewController:webViewController animated:YES];
 }
