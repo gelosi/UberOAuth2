@@ -8,6 +8,19 @@
 
 #import "UberAPI.h"
 
+static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
+    
+    NSDictionary *responseObject;
+    
+    @try {
+        responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    } @catch (NSException *exception) {
+        responseObject = nil;
+    }
+    
+    return responseObject;
+}
+
 @implementation UberAPI
 
 - (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret apiURL:(NSURL *)apiURL loginURL:(NSURL *)loginURL
@@ -58,7 +71,8 @@
     [request setHTTPBody:bodyData];
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        NSDictionary *responseObject = JSONFromData(data);
         
         UberAPIAccessToken *accessToken = [[UberAPIAccessToken alloc] initWithDictionary:responseObject];
         
@@ -113,7 +127,8 @@
     [request setHTTPBody:bodyData];
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        NSDictionary *responseObject = JSONFromData(data);
         
         UberAPIAccessToken *accessToken = [[UberAPIAccessToken alloc] initWithDictionary:responseObject];
         
@@ -173,20 +188,24 @@
     
     [request setHTTPMethod:@"GET"];
     
-    [request setValue:[NSString stringWithFormat:@"Bearer %@",self.accessToken.accessToken] forHTTPHeaderField:@"Authorization"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    [self performAutorizedRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSDictionary *responseObject = JSONFromData(data);
         if (requestResult) {
             [self.completionQueue addOperationWithBlock:^{
                 requestResult(responseObject, error);
             }];
-            
         }
-        
     }];
+}
+
+- (void)performAutorizedRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completion
+{
+    NSMutableURLRequest *autorizedRequest = request.mutableCopy;
+    
+    [autorizedRequest setValue:[NSString stringWithFormat:@"Bearer %@",self.accessToken.accessToken] forHTTPHeaderField:@"Authorization"];
+    [autorizedRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:autorizedRequest completionHandler:completion];
     
     [task resume];
 }

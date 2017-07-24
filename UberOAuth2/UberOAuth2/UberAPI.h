@@ -39,6 +39,10 @@ typedef void (^UberAPILoginCompletion)(UberAPIAccessToken *accessToken, NSError 
 
 - (void)requestUserProfileWithResult:(UberAPIRequestCompletion)requestResult;
 
+/** perform `request` by adding content-type application/json and setting proper Autorization header
+ */
+- (void)performAutorizedRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
