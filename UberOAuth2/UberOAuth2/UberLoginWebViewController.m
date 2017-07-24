@@ -105,6 +105,13 @@
     return YES;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [self.delegate loginController:self didFailWithError:error];
+}
+
+
+#pragma mark - token request stuff
 
 - (void)requestAccessTokenActionWithCode:(NSString *)code
 {
