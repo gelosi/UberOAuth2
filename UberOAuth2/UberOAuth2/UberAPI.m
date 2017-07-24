@@ -33,6 +33,7 @@ static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
         _apiURL = apiURL.copy;
         _loginURL = loginURL.copy;
         _completionQueue = [NSOperationQueue mainQueue];
+        _urlSession = [NSURLSession sharedSession];
     }
     
     return self;

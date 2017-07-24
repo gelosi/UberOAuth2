@@ -25,7 +25,17 @@ typedef void (^UberAPILoginCompletion)(UberAPIAccessToken *accessToken, NSError 
 @property (nonatomic, copy, nullable) NSString *redirectURL;
 @property (nonatomic, copy, nullable) UberAPIAccessToken *accessToken;
 
-@property (nonatomic) NSOperationQueue *completionQueue; // default - mainQueue
+/*! Completion queue to use to run user completion blocks
+@remark default is <b>mainQueue</b>
+ */
+@property (nonatomic) NSOperationQueue *completionQueue;
+
+/** default `sharedSession`
+ */
+/*! NSURLSession to run ALL API requests
+ @remark default is <b>sharedSession</b>
+ */
+@property (nonatomic) NSURLSession *urlSession;
 
 - (instancetype)initWithClientID:(NSString *)clientID secret:(NSString *)clientSecret apiURL:(NSURL *)apiURL loginURL:(NSURL *)loginURL;
 
