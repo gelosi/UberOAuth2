@@ -70,8 +70,8 @@ static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
     
     NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:bodyData];
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         NSDictionary *responseObject = JSONFromData(data);
         
@@ -126,8 +126,8 @@ static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
     
     NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:bodyData];
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         NSDictionary *responseObject = JSONFromData(data);
         
@@ -163,8 +163,8 @@ static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
     
     NSData *bodyData = [postBodyString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:bodyData];
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 
         if( !error) {
             self.accessToken = nil;
@@ -206,7 +206,7 @@ static NSDictionary * _Nullable JSONFromData(NSData * _Nullable data) {
     [autorizedRequest setValue:[NSString stringWithFormat:@"Bearer %@",self.accessToken.accessToken] forHTTPHeaderField:@"Authorization"];
     [autorizedRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:autorizedRequest completionHandler:completion];
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:autorizedRequest completionHandler:completion];
     
     [task resume];
 }
