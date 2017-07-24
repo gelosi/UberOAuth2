@@ -201,7 +201,9 @@ static NSInteger const PlaceholderViewTag = 0xBAD1DEA;
         }] ;
     }
     
-    [self.delegate loginController:self didFailWithError:error];
+    if( error.code != 102) { // Frame load interrupted - we generate this error by saying NO in shouldStartLoadWithRequest:..
+        [self.delegate loginController:self didFailWithError:error];
+    }
 }
 
 
