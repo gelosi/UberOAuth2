@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface UberLoginWebViewController : UIViewController
+@property(nonatomic, strong) UIView *loadingView;
 @property(nonatomic, strong) NSURL *autorizationURL;//LoginWebViewController 's url
 @property(nonatomic) UberAPI *uberAPI;
 

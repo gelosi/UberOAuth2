@@ -8,6 +8,9 @@
 
 #import "UberLoginWebViewController.h"
 #import "UberAPI.h"
+
+static NSInteger const PlaceholderViewTag = 0xBAD1DEA;
+
 @interface UberLoginWebViewController ()<UIWebViewDelegate>
 
 @end
@@ -36,15 +39,76 @@
     }
 
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if( self.loadingView) {
+        [self installPlaceholderLoadingView];
+        
+        UIView *placeholder = [self placeholderLoadingView];
+        
+        if(placeholder.subviews.firstObject != self.loadingView) {
+            [placeholder.subviews enumerateObjectsUsingBlock:^(UIView *v, NSUInteger i, BOOL *stop) {
+                [v removeFromSuperview];
+            }];
+            
+            [placeholder addSubview:self.loadingView];
+            
+            NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.loadingView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+            
+            NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.loadingView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+            
+            [placeholder addConstraints:@[centerX, centerY]];
+            
+            [self.view layoutIfNeeded];
+        }
+    }
+}
+
 - (void)backBtAction
 {
     [self.delegate loginControllerDidCancel:self];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)installPlaceholderLoadingView
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    UIView *placeholder = [self placeholderLoadingView];
+    
+    if(!placeholder) {
+        placeholder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+        placeholder.translatesAutoresizingMaskIntoConstraints = NO;
+        placeholder.tag = PlaceholderViewTag;
+        placeholder.clipsToBounds = NO;
+        
+        [self.view addSubview:placeholder];
+        
+        NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+        
+        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+        
+        NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:1];
+        
+        NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:placeholder attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:1];
+        
+        [self.view addConstraints:@[centerX, centerY, height, width]];
+    }
+}
+
+
+
+- (UIView *)placeholderLoadingView
+{
+    UIView *placeholder;
+    
+    for( UIView *view in self.view.subviews) {
+        if(!placeholder && ![view isKindOfClass:UIWebView.class] && view.tag == PlaceholderViewTag) {
+            placeholder = view;
+        }
+    }
+    
+    return placeholder;
 }
 
 #pragma mark - UIWebViewDelegate
@@ -105,8 +169,38 @@
     return YES;
 }
 
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    if( self.loadingView) {
+        self.loadingView.hidden = NO;
+        self.loadingView.alpha = 0;
+        [UIView animateWithDuration:0.2 animations:^{
+            self.loadingView.alpha = 1;
+        }] ;
+    }
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if( self.loadingView) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.loadingView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.loadingView.hidden = YES;
+        }] ;
+    }
+}
+
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    if( self.loadingView) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.loadingView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.loadingView.hidden = YES;
+        }] ;
+    }
+    
     [self.delegate loginController:self didFailWithError:error];
 }
 
